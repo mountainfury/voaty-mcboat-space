@@ -25,3 +25,5 @@ For your peace of mind,
 presume that the working root directory starts at /decent-container/ 
 (aka if there is a folder in decent-container/application/var/ the container will see it as /application/var)
 
+It is vitally important that you do NOT rename the root directory folder, as networking and interconnected-ness and like the zen of the whole thing, rests entirely on the root folder name... 
+
