@@ -1,6 +1,6 @@
 {
     "debug":false,
-    "SQLALCHEMY_DATABASE_URI":"postgresql+psycopg2://postgres:password@pythonserving_db_1/voat",
+    "SQLALCHEMY_DATABASE_URI":"postgresql+psycopg2://postgres:password@decentcontainer_db_1/voat",
     "min_length_username":4,
     "min_length_api_token":4,
     "min_length_subvoat_name":4,
