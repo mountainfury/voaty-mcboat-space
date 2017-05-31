@@ -1,0 +1,65 @@
+#!/bin/bash
+if [ "$(id -u)" != "0" ]; then
+	echo "Voat must be run as root" 1>&2
+	exit 1
+fi
+SRC_DIR="src-dir"
+LOG_FILE=/var/log/voat.log
+
+start(){
+	echo > $LOG_FILE
+	echo "Starting Voat server..."
+	/usr/bin/python3 $SRC_DIR/rest_server.py 2>&1 | awk '{print "[REST]:   \t", $0}' >> $LOG_FILE &
+	echo $! > /var/run/voat.pid
+	echo "Starting Celery..."
+	celery -A voat_utils.updater worker --loglevel=info 2>&1 | awk '{print "[Celery]:\t", $0}' >> $LOG_FILE &
+	echo "Starting Listener..."
+	FLASK_APP=$SRC_DIR/listener.py flask run --host 0.0.0.0 --port 8000 2>&1 | awk '{print "[Listener]:\t", $0}' >> $LOG_FILE &
+	echo
+	echo "Logging at $LOG_FILE"
+}
+stop(){
+	if [ -f /var/run/voat.pid ]; then
+		echo "Stopping Voat server..."
+		for pid in `ps aux | grep rest_server | awk '{print $2}'`; do
+			kill -9 $pid &> /dev/null
+			echo "Killed $pid"
+		done
+		echo
+		echo "Stopping Celery..."
+		pkill celery
+		echo "Stopping Listener..."
+		pkill flask
+		rm /var/run/voat.pid
+	else
+		echo "Voat server is not running."
+	fi
+}
+status(){
+	if [ -f /var/run/voat.pid ]; then
+		echo "Voat server is running."
+		echo "PID: $(cat /var/run/voat.pid)"
+		exit 0
+	else
+		echo "Voat server is not running"
+	fi
+}
+
+case "$1" in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	restart)
+		stop
+		start
+		;;
+	status)
+		status
+		;;
+	*)
+		echo "Usage: sudo voat start|stop|restart"
+		exit 1
+esac

@@ -1,0 +1,14 @@
+flask-restful
+flask
+flask-cors
+sqlalchemy
+sqlalchemy_utils
+passlib
+voluptuous
+pycrypto
+requests
+celery
+redis
+uwsgi
+psycopg2
+gunicorn

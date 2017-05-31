@@ -1,0 +1,19 @@
+; sudo uwsgi --ini config/rest_server.ini
+; http://uwsgi-docs.readthedocs.io/en/latest/ThingsToKnow.html
+
+[uwsgi]
+
+chdir = /application/
+module = rest_server:app
+
+master = true
+processes = 1
+threads = 2
+
+uid = voat
+gid = voat
+socket = 0.0.0.0:3031
+chmod-socket = 664
+vacuum = true
+
+die-on-term = true
