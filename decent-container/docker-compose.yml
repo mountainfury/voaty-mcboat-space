@@ -3,8 +3,7 @@ services:
   application:
     restart: always
     build: ./application
-    command: /application/install.sh
-    command: /application/bin/voat start
+    command: python3 /application/rest_server.py
     links:
       - db
     expose:

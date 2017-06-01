@@ -1,4 +1,3 @@
-
 from flask import Flask
 from flask_restful import  Api
 from flask_cors import CORS, cross_origin
@@ -10,7 +9,6 @@ from voat_rest  import subvoat
 from voat_rest  import utils
 from voat_rest  import vote
 from voat_utils import config
-
 
 from voat_sql.utils.db import get_db
 
@@ -45,7 +43,3 @@ api.add_resource(utils.GetPublicKey,        '/get_public_key', resource_class_kw
 if __name__ == '__main__':
     # Make it pull all of these options from the config
     app.run(host="0.0.0.0", port=8080, debug=config.get_config()['debug'])
-         
-        
-
-        

@@ -34,7 +34,7 @@ class CreateDB():
 if __name__ == '__main__':
     # Reads the config file, creates the database, checks to make sure it was actually created
     
-    with open('/etc/voat/config/config.json') as c:
+    with open('config/config.json') as c:
         cfg     = json.load(c)
         db_path = cfg['SQLALCHEMY_DATABASE_URI']
 

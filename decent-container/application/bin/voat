@@ -23,8 +23,12 @@ start(){
 	echo "Checking for services!"
 	directoryx="$(dirname -- $(readlink -fn -- "$0"; echo x))"
 	directory="${directoryx%x}"
+	echo "The current directory is: $directory"
 	var_path=$PWD  
-	echo $var_path
+	echo "We are currently sitting at: $var_path"
+	if  print "[Preflight]: \t : Log write test!";then 
+		echo "Preflight log test complete!"
+	fi
 	if [ -f $SRC_DIR/rest_server.py ]
 	then
     		echo "We are well REST'd!" 
@@ -43,10 +47,19 @@ start(){
 	echo $! > /var/run/voat.pid
 	echo "Starting Celery..."
 	celery -A voat_utils.updater worker --loglevel=info 2>&1 | awk '{print "[Celery]:\t", $0}' >> $LOG_FILE &
+	if service --status-all 2>&1 | grep -Fq 'celery'; then    
+	  echo "Celery... "   
+	fi
 	echo "Starting Listener..."
 	FLASK_APP=$SRC_DIR/listener.py flask run --host 0.0.0.0 --port 8000 2>&1 | awk '{print "[Listener]:\t", $0}' >> $LOG_FILE &
 	echo
 	echo "Logging at $LOG_FILE"
+	echo 
+	echo "Checking that things are listening..."
+	lsof -i:8000
+	if service --status-all 2>&1 | grep -Fq 'voat'; then
+          echo "Yay! Everything is running!"
+        fi
 }
 stop(){
 	if [ -f /var/run/voat.pid ]; then
