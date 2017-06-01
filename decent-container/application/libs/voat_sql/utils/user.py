@@ -1,10 +1,10 @@
 import uuid
 import datetime
+import transaction
 
 from passlib.apps           import custom_app_context as pwd_context
 from voluptuous             import Schema, Required, All, Length, MultipleInvalid
 from dateutil.relativedelta import relativedelta
-import transaction
 
 from voat_sql.utils    import db
 from voat_utils.config import get_config

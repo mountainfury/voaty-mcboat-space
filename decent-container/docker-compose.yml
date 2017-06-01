@@ -1,32 +1,31 @@
 version: '2'
 services:
-  application:
-    restart: always
-    build: ./application
-    command: python3 /application/rest_server.py
-    links:
-      - db
-    expose:
-     - "5000"
-    ports:
-      - "5000:5000"
   db:
     restart: always
     image: postgres:9.6.1-alpine
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=d
-      - POSTGRES_PASSWORD=d
-      - POSTGRES_DB=d
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=voat
     volumes:
       - ./postgres:/var/lib/postgresql
+  application:
+    build: ./application
+    command: python3 /application/rest_server.py
+    links:
+      - db
+    expose:
+     - "8080"
+    ports:
+      - "8080:8080"
   nginx:
     restart: always
     build: ./nginx
     links:
       - application
     expose:
-      - 8080
+      - 80
     ports:
-      - "8880:8080"
+      - "8880:80"
